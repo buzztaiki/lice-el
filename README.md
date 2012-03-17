@@ -1,0 +1,3 @@
+lice.el - License Template
+==========================
+
