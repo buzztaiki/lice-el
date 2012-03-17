@@ -1,9 +1,9 @@
-;;; lice.el --- License Template
+;;; lice.el --- License And Header Template
 
 ;; Copyright (C) 2012  Taiki SUGAWARA
 
 ;; Author: Taiki SUGAWARA <buzz.taiki@gmail.com>
-;; Keywords: 
+;; Keywords: template, license, tools
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -28,23 +28,23 @@
   (require 'cl))
 (require 'newcomment)
 
-(defconst lice:default-template-directory
+(defconst lice:system-template-directory
   (expand-file-name "template"
 		    (or (and load-file-name (file-name-directory load-file-name))
 			default-directory)))
 
 (defgroup lice nil
-  "License Template"
+  "License And Header Template"
   :prefix "lice:")
 
 (defcustom lice:license-directories
-  (list lice:default-template-directory)
-  "A location of License template directories"
+  (list lice:system-template-directory)
+  "The location of License template directories"
   :group 'lice
   :type '(repeat directory))
 
 (defcustom lice:comment-style 'extra-line
-  "A comment style for license insertion.
+  "The comment style for license insertion.
 Use `comment-style' value when this is nil."
   :group 'lice
   :type `(choice
@@ -56,19 +56,23 @@ Use `comment-style' value when this is nil."
 	  (other :tag "Mode Default" nil)))
 
 (defcustom lice:default-license "gpl-3.0"
-  "A default license name"
+  "The default license name"
   :group 'lice
   :type 'string)
 
-(defcustom lice:coypright-function 'lice:default-copyright
-  "A copyright inserter function."
+(defcustom lice:header-spec '(lice:insert-copyright
+			      lice:insert-license)
+  "The license header spec.
+Each element should be function.
+These functions should take one argument, license object, and
+should insert header string fragment."
   :group 'lice
-  :type 'function)
+  :type '(repeat function))
 
 (defcustom lice:mode-comments
   (loop for mode in '(c-mode c++-mode java-mode groovy-mode)
 	collect (list mode :comment-start "/*" :comment-end "*/"))
-  "A definition of mode specific comments.
+  "The definition of mode specific comments.
 Each elements are follows:
 \(MODE :comment-start COMMENT-START :comment-end COMMENT-END))"
   :group 'lice
@@ -88,7 +92,7 @@ Each element are follows:
   (loop for dir in lice:license-directories
 	with licenses
 	if (and dir (file-directory-p dir))
-	append (lice-directory-licenses dir) into licenses
+	append (lice:directory-licenses dir) into licenses
 	finally return (sort licenses
 			     (lambda (a b) (string< (car a) (car b))))))
 
@@ -99,21 +103,26 @@ Each element are follows:
 	if (and (file-regular-p file) (not (assoc name licenses)))
 	collect (cons name file)))
 
-(defun lice:default-copyright (name)
-  (format "Copyright (C) %s  %s\n\n"
-	  (format-time-string "%Y") (user-full-name)))
-
-(defun lice:insert-license (name)
+(defun lice (name)
+  "Insert license and headers."
   (interactive (list (lice:read-license)))
   (let ((license (assoc name (lice:licenses))))
     (unless license
       (error "Unknown license name: %s" name))
     (goto-char (point-min))
-    (insert (with-temp-buffer
-	      (insert (funcall lice:coypright-function name))
-	      (insert-file-contents (cdr license))
-	      (buffer-string)))
-    (lice:comment-region (point-min) (point) major-mode)))
+    (save-restriction
+      (loop for component in lice:header-spec
+	    do (progn (funcall component license)
+		      (goto-char (point-max))))
+      (lice:comment-region (point-min) (point-max) major-mode)
+      (goto-char (point-max)))))
+
+(defun lice:insert-copyright (license)
+  (insert (format "Copyright (C) %s  %s\n\n"
+		  (format-time-string "%Y") (user-full-name))))
+
+(defun lice:insert-license (license)
+  (insert-file-contents (cdr license)))
 
 (defun lice:read-license ()
   (completing-read (format "License Name (%s): " lice:default-license)
