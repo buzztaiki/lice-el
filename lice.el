@@ -47,6 +47,8 @@
   (require 'cl))
 (require 'newcomment)
 
+(defconst lice:version "0.1")
+
 (defconst lice:system-template-directory
   (expand-file-name "template"
 		    (or (and load-file-name (file-name-directory load-file-name))
