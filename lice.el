@@ -4,6 +4,7 @@
 
 ;; Author: Taiki SUGAWARA <buzz.taiki@gmail.com>
 ;; Keywords: template, license, tools
+;; URL: https://github.com/buzztaiki/lice-el
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -56,7 +57,8 @@
 
 (defgroup lice nil
   "License And Header Template"
-  :prefix "lice:")
+  :prefix "lice:"
+  :link '(url-link "https://github.com/buzztaiki/lice-el"))
 
 (defcustom lice:license-directories
   (list lice:system-template-directory)
