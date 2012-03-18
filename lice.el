@@ -52,8 +52,8 @@
 
 (defconst lice:system-template-directory
   (expand-file-name "template"
-		    (or (and load-file-name (file-name-directory load-file-name))
-			default-directory)))
+                    (or (and load-file-name (file-name-directory load-file-name))
+                        default-directory)))
 
 (defgroup lice nil
   "License And Header Template"
@@ -63,11 +63,11 @@
 (define-widget 'lice:comment-style 'choice
   "The comment style selection widget."
   :args `(,@(loop for x in comment-styles
-		  collect `(const
-			    :tag ,(replace-regexp-in-string
-				   "-" " " (capitalize (symbol-name (car x))))
-			    ,(car x)))
-	  (other :tag "Mode Default" nil)))
+                  collect `(const
+                            :tag ,(replace-regexp-in-string
+                                   "-" " " (capitalize (symbol-name (car x))))
+                            ,(car x)))
+          (other :tag "Mode Default" nil)))
 
 (defcustom lice:license-directories
   (list lice:system-template-directory)
@@ -87,7 +87,7 @@ When nil, `comment-style' value is used."
   :type 'string)
 
 (defcustom lice:header-spec '(lice:insert-copyright
-			      lice:insert-license)
+                              lice:insert-license)
   "The license header spec.
 Each element should be function.
 These functions should take one argument, license object, and
@@ -97,9 +97,9 @@ should insert header string fragment."
 
 (defcustom lice:mode-comments
   (loop for mode in '(c-mode c++-mode java-mode groovy-mode)
-	collect (list mode
-		      :comment-start "/*"
-		      :comment-end "*/"))
+        collect (list mode
+                      :comment-start "/*"
+                      :comment-end "*/"))
   "The definition of mode specific comments.
 Each elements are follows:
   \(MODE . PROPERTIES))
@@ -111,10 +111,10 @@ PROPERTIES is a plist whitch has following properties:
 "
   :group 'lice
   :type '(repeat (cons :format "%v" :indent 9
-		       (function :tag "Mode" :size 20)
-		       (sexp :tag ""
-			     :value-to-internal (lambda (widget value)
-						  (prin1-to-string value))))))
+                       (function :tag "Mode" :size 20)
+                       (sexp :tag ""
+                             :value-to-internal (lambda (widget value)
+                                                  (prin1-to-string value))))))
 
 (defvar lice:license-history nil)
 
@@ -123,18 +123,18 @@ PROPERTIES is a plist whitch has following properties:
 Each element are follows:
 \(SIMPLE-NAME . FILE)"
   (loop for dir in lice:license-directories
-	with licenses
-	if (and dir (file-directory-p dir))
-	append (lice:directory-licenses dir) into licenses
-	finally return (sort licenses
-			     (lambda (a b) (string< (car a) (car b))))))
+        with licenses
+        if (and dir (file-directory-p dir))
+        append (lice:directory-licenses dir) into licenses
+        finally return (sort licenses
+                             (lambda (a b) (string< (car a) (car b))))))
 
 (defun lice:directory-licenses (dir)
   (loop for file in (directory-files dir t)
-	with licenses
-	for name = (file-name-nondirectory file)
-	if (and (file-regular-p file) (not (assoc name licenses)))
-	collect (cons name file)))
+        with licenses
+        for name = (file-name-nondirectory file)
+        if (and (file-regular-p file) (not (assoc name licenses)))
+        collect (cons name file)))
 
 (defun lice (name)
   "Insert license and headers."
@@ -145,31 +145,31 @@ Each element are follows:
     (goto-char (point-min))
     (save-restriction
       (loop for component in lice:header-spec
-	    do (progn (funcall component license)
-		      (goto-char (point-max))))
+            do (progn (funcall component license)
+                      (goto-char (point-max))))
       (lice:comment-region (point-min) (point-max) major-mode)
       (goto-char (point-max)))))
 
 (defun lice:insert-copyright (license)
   (insert (format "Copyright (C) %s  %s\n\n"
-		  (format-time-string "%Y") (user-full-name))))
+                  (format-time-string "%Y") (user-full-name))))
 
 (defun lice:insert-license (license)
   (insert-file-contents (cdr license)))
 
 (defun lice:read-license ()
   (completing-read (format "License Name (%s): " lice:default-license)
-		   (lice:licenses)
-		   nil t nil 'lice:license-history
-		   lice:default-license))
+                   (lice:licenses)
+                   nil t nil 'lice:license-history
+                   lice:default-license))
 
 (defun lice:comment-region (start end mode)
   (let* ((comment (cdr (assq mode lice:mode-comments)))
-	 (comment-start (or (plist-get comment :comment-start) comment-start))
-	 (comment-end (or (plist-get comment :comment-end) comment-end))
-	 (comment-style (or (plist-get comment :comment-style)
-			    lice:comment-style
-			    comment-style)))
+         (comment-start (or (plist-get comment :comment-start) comment-start))
+         (comment-end (or (plist-get comment :comment-end) comment-end))
+         (comment-style (or (plist-get comment :comment-style)
+                            lice:comment-style
+                            comment-style)))
     (comment-region start end)))
 
 (provide 'lice)
