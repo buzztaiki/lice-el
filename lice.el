@@ -48,7 +48,7 @@
   (require 'cl))
 (require 'newcomment)
 
-(defconst lice:version "0.1")
+(defconst lice:version "0.1-DEV")
 
 (defconst lice:system-template-directory
   (expand-file-name "template"
