@@ -61,7 +61,7 @@
   :link '(url-link "https://github.com/buzztaiki/lice-el"))
 
 (define-widget 'lice:comment-style 'choice
-  "The comment style selection"
+  "The comment style selection widget."
   :args `(,@(loop for x in comment-styles
 		  collect `(const
 			    :tag ,(replace-regexp-in-string
@@ -77,7 +77,7 @@
 
 (defcustom lice:comment-style 'extra-line
   "The comment style for license insertion.
-Use `comment-style' value when this is nil."
+When nil, `comment-style' value is used."
   :group 'lice
   :type 'lice:comment-style)
 
