@@ -142,8 +142,8 @@ Each element are follows:
   (let ((license (assoc name (lice:licenses))))
     (unless license
       (error "Unknown license name: %s" name))
-    (goto-char (point-min))
     (save-restriction
+      (narrow-to-region (point) (point))
       (loop for component in lice:header-spec
             do (progn (funcall component license)
                       (goto-char (point-max))))
