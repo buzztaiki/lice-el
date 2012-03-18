@@ -99,8 +99,7 @@ should insert header string fragment."
   (loop for mode in '(c-mode c++-mode java-mode groovy-mode)
 	collect (list mode
 		      :comment-start "/*"
-		      :comment-end "*/"
-		      :comment-style 'extra-line))
+		      :comment-end "*/"))
   "The definition of mode specific comments.
 Each elements are follows:
   \(MODE . PROPERTIES))
@@ -111,16 +110,11 @@ PROPERTIES is a plist whitch has following properties:
   :comment-style - `comment-style' of this MODE.
 "
   :group 'lice
-  :type '(repeat (list :format "%v\n"
-		  (function :tag "Mode" :size 20)
-		       (const :format " " :comment-start)
-		       (string :tag "Comment Start" :size 5)
-		       (const :format " " :comment-end)
-		       (string :tag "End" :size 5)
-		       (const :format " " :comment-style)
-		       (lice:comment-style
-			:format "%[%t%]: %v"
-			:tag "Style"))))
+  :type '(repeat (cons :format "%v" :indent 9
+		       (function :tag "Mode" :size 20)
+		       (sexp :tag ""
+			     :value-to-internal (lambda (widget value)
+						  (prin1-to-string value))))))
 
 (defvar lice:license-history nil)
 
