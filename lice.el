@@ -97,17 +97,30 @@ should insert header string fragment."
 
 (defcustom lice:mode-comments
   (loop for mode in '(c-mode c++-mode java-mode groovy-mode)
-	collect (list mode :comment-start "/*" :comment-end "*/"))
+	collect (list mode
+		      :comment-start "/*"
+		      :comment-end "*/"
+		      :comment-style 'extra-line))
   "The definition of mode specific comments.
 Each elements are follows:
-\(MODE :comment-start COMMENT-START :comment-end COMMENT-END))"
+  \(MODE . PROPERTIES))
+Mode is a major-mode which is applied PROPERTIES.
+PROPERTIES is a plist whitch has following properties:
+  :comment-start - `comment-start' of this MODE.
+  :comment-end   - `comment-end' of this MODE.
+  :comment-style - `comment-style' of this MODE.
+"
   :group 'lice
   :type '(repeat (list :format "%v\n"
 		  (function :tag "Mode" :size 20)
-		       (const :format "" :comment-start)
-		       (string :tag " Comment Start" :size 5)
-		       (const :format "" :comment-end)
-		       (string :tag " End" :size 5))))
+		       (const :format " " :comment-start)
+		       (string :tag "Comment Start" :size 5)
+		       (const :format " " :comment-end)
+		       (string :tag "End" :size 5)
+		       (const :format " " :comment-style)
+		       (lice:comment-style
+			:format "%[%t%]: %v"
+			:tag "Style"))))
 
 (defvar lice:license-history nil)
 
@@ -160,7 +173,9 @@ Each element are follows:
   (let* ((comment (cdr (assq mode lice:mode-comments)))
 	 (comment-start (or (plist-get comment :comment-start) comment-start))
 	 (comment-end (or (plist-get comment :comment-end) comment-end))
-	 (comment-style (or lice:comment-style comment-style)))
+	 (comment-style (or (plist-get comment :comment-style)
+			    lice:comment-style
+			    comment-style)))
     (comment-region start end)))
 
 (provide 'lice)
