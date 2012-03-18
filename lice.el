@@ -163,8 +163,13 @@ Each element are follows:
                    nil t nil 'lice:license-history
                    lice:default-license))
 
+(defun lice:mode-comment (mode)
+  (and mode
+       (or (cdr (assq mode lice:mode-comments))
+           (lice:mode-comment (get mode 'derived-mode-parent)))))
+
 (defun lice:comment-region (start end mode)
-  (let* ((comment (cdr (assq mode lice:mode-comments)))
+  (let* ((comment (lice:mode-comment mode))
          (comment-start (or (plist-get comment :comment-start) comment-start))
          (comment-end (or (plist-get comment :comment-end) comment-end))
          (comment-style (or (plist-get comment :comment-style)
