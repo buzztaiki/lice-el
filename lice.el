@@ -60,6 +60,15 @@
   :prefix "lice:"
   :link '(url-link "https://github.com/buzztaiki/lice-el"))
 
+(define-widget 'lice:comment-style 'choice
+  "The comment style selection"
+  :args `(,@(loop for x in comment-styles
+		  collect `(const
+			    :tag ,(replace-regexp-in-string
+				   "-" " " (capitalize (symbol-name (car x))))
+			    ,(car x)))
+	  (other :tag "Mode Default" nil)))
+
 (defcustom lice:license-directories
   (list lice:system-template-directory)
   "The location of License template directories"
@@ -70,13 +79,7 @@
   "The comment style for license insertion.
 Use `comment-style' value when this is nil."
   :group 'lice
-  :type `(choice
-	  ,@(loop for x in comment-styles
-		  collect `(const
-			    :tag ,(replace-regexp-in-string
-				   "-" " " (capitalize (symbol-name (car x))))
-			    ,(car x)))
-	  (other :tag "Mode Default" nil)))
+  :type 'lice:comment-style)
 
 (defcustom lice:default-license "gpl-3.0"
   "The default license name"
