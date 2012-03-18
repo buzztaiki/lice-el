@@ -43,6 +43,7 @@
 ;; When you select license, and enter the `RET`, license and copyright is
 ;; putted into a text.
 
+;;; Code:
 
 (eval-when-compile
   (require 'cl))
@@ -137,7 +138,8 @@ Each element are follows:
         collect (cons name file)))
 
 (defun lice (name)
-  "Insert license and headers."
+  "Insert license and headers.
+NAME is a template name for insertion."
   (interactive (list (lice:read-license)))
   (let ((license (assoc name (lice:licenses))))
     (unless license
