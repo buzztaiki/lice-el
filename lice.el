@@ -1,8 +1,8 @@
 ;;; lice.el --- License And Header Template
 
-;; Copyright (C) 2012  Taiki SUGAWARA
+;; Copyright (C) 2012  Taiki Sugawara
 
-;; Author: Taiki SUGAWARA <buzz.taiki@gmail.com>
+;; Author: Taiki Sugawara <buzz.taiki@gmail.com>
 ;; Keywords: template, license, tools
 ;; URL: https://github.com/buzztaiki/lice-el
 
