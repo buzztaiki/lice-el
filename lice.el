@@ -177,7 +177,10 @@ NAME is a template name for insertion."
          (comment-style (or (plist-get comment :comment-style)
                             lice:comment-style
                             comment-style)))
-    (comment-region start end)))
+    (save-restriction
+      (narrow-to-region start end)
+      (comment-region (point-min) (point-max))
+      (delete-trailing-whitespace (point-min) (point-max)))))
 
 (provide 'lice)
 ;;; lice.el ends here
