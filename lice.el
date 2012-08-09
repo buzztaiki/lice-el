@@ -85,6 +85,7 @@ When nil, `comment-style' value is used."
 (defcustom lice:default-license "gpl-3.0"
   "The default license name"
   :group 'lice
+  :safe 'stringp
   :type 'string)
 
 (defcustom lice:header-spec '(lice:insert-copyright
