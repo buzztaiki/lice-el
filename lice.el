@@ -109,10 +109,12 @@ should insert header string fragment."
   :type '(repeat function))
 
 (defcustom lice:mode-comments
-  (loop for mode in '(c-mode c++-mode java-mode groovy-mode)
-        collect (list mode
-                      :comment-start "/*"
-                      :comment-end "*/"))
+  (append
+   (loop for mode in '(c-mode c++-mode java-mode groovy-mode)
+         collect (list mode
+                       :comment-start "/*"
+                       :comment-end "*/"))
+   '((nxml-mode :comment-continue "   ")))
   "The definition of mode specific comments.
 Each elements are follows:
   \(MODE . PROPERTIES))
@@ -121,6 +123,7 @@ PROPERTIES is a plist whitch has following properties:
   :comment-start - `comment-start' of this MODE.
   :comment-end   - `comment-end' of this MODE.
   :comment-style - `comment-style' of this MODE.
+  :comment-continue - `comment-continue' of this MODE.
 "
   :group 'lice
   :type '(repeat (cons :format "%v" :indent 9
@@ -188,7 +191,8 @@ NAME is a template name for insertion."
          (comment-end (or (plist-get comment :comment-end) comment-end))
          (comment-style (or (plist-get comment :comment-style)
                             lice:comment-style
-                            comment-style)))
+                            comment-style))
+         (comment-continue (or (plist-get comment :comment-continue) comment-continue)))
     (save-restriction
       (narrow-to-region start end)
       (comment-region (point-min) (point-max))
