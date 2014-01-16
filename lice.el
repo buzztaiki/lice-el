@@ -152,6 +152,7 @@ Each element are follows:
         if (and (file-regular-p file) (not (assoc name licenses)))
         collect (cons name file)))
 
+;;;###autoload
 (defun lice (name)
   "Insert license and headers.
 NAME is a template name for insertion."
