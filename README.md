@@ -34,3 +34,12 @@ your project root directory and write follows:
 
 That means use `mit' for default license template.
 
+
+Customer license headers
+------------------------
+
+You could add custom license headers to `lice.el`. Creates a directory like that :
+
+	$HOME/.emacs.d/lice
+
+and put yours license headers into this directory.

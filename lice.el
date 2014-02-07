@@ -60,12 +60,15 @@
   (require 'cl))
 (require 'newcomment)
 
-(defconst lice:version "0.1-DEV")
+(defconst lice:version "0.2")
 
 (defconst lice:system-template-directory
   (expand-file-name "template"
                     (or (and load-file-name (file-name-directory load-file-name))
                         default-directory)))
+
+(defvar lice:custom-template-directory
+  (concat (expand-file-name "~") "/.emacs.d/lice/"))
 
 (defgroup lice nil
   "License And Header Template"
@@ -82,7 +85,7 @@
           (other :tag "Mode Default" nil)))
 
 (defcustom lice:license-directories
-  (list lice:system-template-directory)
+  (list lice:system-template-directory lice:custom-template-directory)
   "The location of License template directories"
   :group 'lice
   :type '(repeat directory))
