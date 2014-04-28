@@ -68,7 +68,8 @@
                         default-directory)))
 
 (defvar lice:custom-template-directory
-  (concat (expand-file-name "~") "/.emacs.d/lice/"))
+  (expand-file-name "lice" user-emacs-directory))
+
 
 (defgroup lice nil
   "License And Header Template"
