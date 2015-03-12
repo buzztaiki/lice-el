@@ -43,16 +43,10 @@
 ;; When you select license, and enter the `RET`, license and copyright is
 ;; putted into a text.
 
-;; Use dir-locals
-;; --------------
+;; More Information
+;; ----------------
 
-;; You can use `.dir-locals.el` for your project. Put `.dir-locals.el` in
-;; your project root directory and write follows:
-
-;;     ((nil
-;;       (lice:default-license . "mit")))
-
-;; That means use `mit' for default license template.
+;; See the `README.md` file for more information.
 
 ;;; Code:
 

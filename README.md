@@ -35,8 +35,8 @@ your project root directory and write follows:
 That means use `mit' for default license template.
 
 
-Customer license headers
-------------------------
+Custom license headers
+----------------------
 
 You could add custom license headers to `lice.el`. Creates a directory like that :
 
