@@ -50,8 +50,7 @@
 
 ;;; Code:
 
-(eval-when-compile
-  (require 'cl))
+(require 'cl-lib)
 (require 'newcomment)
 
 (defconst lice:version "0.2")
@@ -72,7 +71,7 @@
 
 (define-widget 'lice:comment-style 'choice
   "The comment style selection widget."
-  :args `(,@(loop for x in comment-styles
+  :args `(,@(cl-loop for x in comment-styles
                   collect `(const
                             :tag ,(replace-regexp-in-string
                                    "-" " " (capitalize (symbol-name (car x))))
@@ -108,7 +107,7 @@ should insert header string fragment."
 
 (defcustom lice:mode-comments
   (append
-   (loop for mode in '(c-mode c++-mode java-mode groovy-mode)
+   (cl-loop for mode in '(c-mode c++-mode java-mode groovy-mode)
          collect (list mode
                        :comment-start "/*"
                        :comment-end "*/"))
@@ -136,7 +135,7 @@ PROPERTIES is a plist whitch has following properties:
   "Return a license list.
 Each element are follows:
 \(SIMPLE-NAME . FILE)"
-  (loop for dir in lice:license-directories
+  (cl-loop for dir in lice:license-directories
         with licenses
         if (and dir (file-directory-p dir))
         append (lice:directory-licenses dir) into licenses
@@ -144,7 +143,7 @@ Each element are follows:
                              (lambda (a b) (string< (car a) (car b))))))
 
 (defun lice:directory-licenses (dir)
-  (loop for file in (directory-files dir t)
+  (cl-loop for file in (directory-files dir t)
         with licenses
         for name = (file-name-nondirectory file)
         if (and (file-regular-p file) (not (assoc name licenses)))
@@ -160,7 +159,7 @@ NAME is a template name for insertion."
       (error "Unknown license name: %s" name))
     (save-restriction
       (narrow-to-region (point) (point))
-      (loop for component in lice:header-spec
+      (cl-loop for component in lice:header-spec
             do (progn (funcall component license)
                       (goto-char (point-max))))
       (lice:comment-region (point-min) (point-max) major-mode)
