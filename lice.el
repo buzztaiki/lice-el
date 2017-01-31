@@ -67,6 +67,7 @@
 (defgroup lice nil
   "License And Header Template"
   :prefix "lice:"
+  :group 'tools
   :link '(url-link "https://github.com/buzztaiki/lice-el"))
 
 (define-widget 'lice:comment-style 'choice
