@@ -34,6 +34,13 @@ your project root directory and write follows:
 
 That means use `mit' for default license template.
 
+You can also set the copyright holder in `.dir-locals.el`. For example the
+folowing will put "John Doe" as the copyright holder:
+
+    ((nil
+      (lice:copyright-holder . "John Doe")))
+
+The default is to use `(user-full-name)`.
 
 Custom license headers
 ----------------------

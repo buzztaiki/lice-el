@@ -97,6 +97,12 @@ When nil, `comment-style' value is used."
   :safe 'stringp
   :type 'string)
 
+(defcustom lice:copyright-holder (user-full-name)
+  "The copyright holder"
+  :group 'lice
+  :safe 'stringp
+  :type 'string)
+
 (defcustom lice:header-spec '(lice:insert-copyright
                               lice:insert-license)
   "The license header spec.
@@ -168,7 +174,7 @@ NAME is a template name for insertion."
 
 (defun lice:insert-copyright (license)
   (insert (format "Copyright (C) %s  %s\n\n"
-                  (format-time-string "%Y") (user-full-name))))
+                  (format-time-string "%Y")  lice:copyright-holder)))
 
 (defun lice:insert-license (license)
   (insert-file-contents (cdr license)))
