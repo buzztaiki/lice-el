@@ -51,6 +51,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(eval-when-compile (require 'cl-macs))
 (require 'newcomment)
 
 (defconst lice:version "0.2")
@@ -157,7 +158,7 @@ Each element are follows:
         collect (cons name file)))
 
 ;;;###autoload
-(defun lice (name)
+(cl-defun lice (name &key (comment t) append-newline)
   "Insert license and headers.
 NAME is a template name for insertion."
   (interactive (list (lice:read-license)))
@@ -169,8 +170,10 @@ NAME is a template name for insertion."
       (cl-loop for component in lice:header-spec
             do (progn (funcall component license)
                       (goto-char (point-max))))
-      (lice:comment-region (point-min) (point-max) major-mode)
-      (goto-char (point-max)))))
+      (when comment
+        (lice:comment-region (point-min) (point-max) major-mode))
+      (goto-char (point-max))
+      (when append-newline (insert "\n")))))
 
 (defun lice:insert-copyright (license)
   (insert (format "Copyright (C) %s  %s\n\n"
