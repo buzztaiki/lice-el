@@ -180,7 +180,7 @@ NAME is a template name for insertion."
   (insert-file-contents (cdr license)))
 
 (defun lice:read-license ()
-  (completing-read (format "License Name (%s): " lice:default-license)
+  (completing-read "License Name: "
                    (lice:licenses)
                    nil t nil 'lice:license-history
                    lice:default-license))
