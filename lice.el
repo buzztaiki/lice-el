@@ -177,7 +177,11 @@ NAME is a template name for insertion."
                   (format-time-string "%Y")  lice:copyright-holder)))
 
 (defun lice:insert-license (license)
-  (insert-file-contents (cdr license)))
+  (insert-file-contents (cdr license))
+  (goto-char (point-max))
+  (skip-chars-backward "\n")
+  (delete-region (point) (point-max))
+  (insert "\n"))
 
 (defun lice:read-license ()
   (completing-read (format "License Name (%s): " lice:default-license)
