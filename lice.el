@@ -88,8 +88,7 @@
 (defcustom lice:comment-style 'extra-line
   "The comment style for license insertion.
 When nil, `comment-style' value is used."
-  :group 'lice
-  :type 'lice:comment-style)
+  :group 'lice  :type 'lice:comment-style)
 
 (defcustom lice:default-license "gpl-3.0"
   "The default license name"
@@ -202,10 +201,13 @@ NAME is a template name for insertion."
                             lice:comment-style
                             comment-style))
          (comment-continue (or (plist-get comment :comment-continue) comment-continue)))
-    (save-restriction
-      (narrow-to-region start end)
-      (comment-region (point-min) (point-max))
-      (delete-trailing-whitespace (point-min) (point-max)))))
+    ;; We comment a license text only if the `mode' supports a comment syntax.
+    ;; A `comment-start' indicates that the `mode' supports it or not (see `comment-normalize-vars').
+    (when comment-start
+      (save-restriction
+        (narrow-to-region start end)
+        (comment-region (point-min) (point-max))
+        (delete-trailing-whitespace (point-min) (point-max))))))
 
 (provide 'lice)
 ;;; lice.el ends here
