@@ -183,7 +183,7 @@ NAME is a template name for insertion."
   (insert "\n"))
 
 (defun lice:read-license ()
-  (completing-read (format "License Name (%s): " lice:default-license)
+  (completing-read "License Name: "
                    (lice:licenses)
                    nil t nil 'lice:license-history
                    lice:default-license))
