@@ -168,7 +168,8 @@ NAME is a template name for insertion."
       (cl-loop for component in lice:header-spec
             do (progn (funcall component license)
                       (goto-char (point-max))))
-      (lice:comment-region (point-min) (point-max) major-mode)
+      (when (lice:comment-enabled-p major-mode)
+        (lice:comment-region (point-min) (point-max) major-mode))
       (goto-char (point-max)))))
 
 (defun lice:insert-copyright (license)
@@ -201,13 +202,15 @@ NAME is a template name for insertion."
                             lice:comment-style
                             comment-style))
          (comment-continue (or (plist-get comment :comment-continue) comment-continue)))
-    ;; We comment a license text only if the `mode' supports a comment syntax.
+    (save-restriction
+      (narrow-to-region start end)
+      (comment-region (point-min) (point-max))
+      (delete-trailing-whitespace (point-min) (point-max)))))
+
+(defun lice:comment-enabled-p (mode)
+  (let ((comment (lice:mode-comment mode)))
     ;; A `comment-start' indicates that the `mode' supports it or not (see `comment-normalize-vars').
-    (when comment-start
-      (save-restriction
-        (narrow-to-region start end)
-        (comment-region (point-min) (point-max))
-        (delete-trailing-whitespace (point-min) (point-max))))))
+    (or (plist-get comment :comment-start) comment-start)))
 
 (provide 'lice)
 ;;; lice.el ends here
