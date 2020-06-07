@@ -32,12 +32,12 @@
 ;; Usage
 ;; -----
 
-;; Usage is very easy, put `lice.el` in your emacs system, and open a new
+;; Usage is very easy, put `lice.el` in your Emacs system, and open a new
 ;; file, and run:
 
 ;;     M-x lice
 
-;; Then, `lice.el` tell to use which license (default is gpl-3.0). You
+;; Then, `lice.el` tell to use which license (default is gpl-3.0).  You
 ;; can select license on minibuffer completion.
 
 ;; When you select license, and enter the `RET`, license and copyright is
@@ -81,7 +81,7 @@
 
 (defcustom lice:license-directories
   (list lice:system-template-directory lice:custom-template-directory)
-  "The location of License template directories"
+  "The location of License template directories."
   :group 'lice
   :type '(repeat directory))
 
@@ -91,13 +91,13 @@ When nil, `comment-style' value is used."
   :group 'lice  :type 'lice:comment-style)
 
 (defcustom lice:default-license "gpl-3.0"
-  "The default license name"
+  "The default license name."
   :group 'lice
   :safe 'stringp
   :type 'string)
 
 (defcustom lice:copyright-holder (user-full-name)
-  "The copyright holder"
+  "The copyright holder."
   :group 'lice
   :safe 'stringp
   :type 'string)
@@ -121,13 +121,12 @@ should insert header string fragment."
   "The definition of mode specific comments.
 Each elements are follows:
   \(MODE . PROPERTIES))
-Mode is a major-mode which is applied PROPERTIES.
+Mode is a `major-mode' which is applied PROPERTIES.
 PROPERTIES is a plist whitch has following properties:
   :comment-start - `comment-start' of this MODE.
   :comment-end   - `comment-end' of this MODE.
   :comment-style - `comment-style' of this MODE.
-  :comment-continue - `comment-continue' of this MODE.
-"
+  :comment-continue - `comment-continue' of this MODE."
   :group 'lice
   :type '(repeat (cons :format "%v" :indent 9
                        (function :tag "Mode" :size 20)
