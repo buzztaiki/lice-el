@@ -96,13 +96,26 @@ When nil, `comment-style' value is used."
   :safe 'stringp
   :type 'string)
 
+(defcustom lice:program-name nil
+  "The name of the program."
+  :group 'lice
+  :safe 'stringp
+  :type 'string)
+
+(defcustom lice:program-description nil
+  "One line to give the program's name and a brief idea of what it does."
+  :group 'lice
+  :safe 'stringp
+  :type 'string)
+
 (defcustom lice:copyright-holder (user-full-name)
   "The copyright holder."
   :group 'lice
   :safe 'stringp
   :type 'string)
 
-(defcustom lice:header-spec '(lice:insert-copyright
+(defcustom lice:header-spec '(lice:insert-description
+                              lice:insert-copyright
                               lice:insert-license)
   "The license header spec.
 Each element should be function.
@@ -171,12 +184,21 @@ NAME is a template name for insertion."
         (lice:comment-region (point-min) (point-max) major-mode))
       (goto-char (point-max)))))
 
+(defun lice:insert-description (license)
+  (when lice:program-description
+    (insert (format "%s\n" lice:program-description))))
+
 (defun lice:insert-copyright (license)
   (insert (format "Copyright (C) %s  %s\n\n"
                   (format-time-string "%Y")  lice:copyright-holder)))
 
 (defun lice:insert-license (license)
   (insert-file-contents (cdr license))
+  (and lice:program-name
+       (member (car license) '("gpl-2.0" "gpl-3.0" "agpl-3.0" "lgpl-3.0"))
+       (insert (format "This file is part of %s.\n\n" lice:program-name))
+       (while (re-search-forward "[Tt]his program" nil t)
+         (replace-match lice:program-name)))
   (goto-char (point-max))
   (skip-chars-backward "\n")
   (delete-region (point) (point-max))
