@@ -194,11 +194,11 @@ NAME is a template name for insertion."
 
 (defun lice:insert-license (license)
   (insert-file-contents (cdr license))
-  (and lice:program-name
-       (member (car license) '("gpl-2.0" "gpl-3.0" "agpl-3.0" "lgpl-3.0"))
-       (insert (format "This file is part of %s.\n\n" lice:program-name))
-       (while (re-search-forward "[Tt]his program" nil t)
-         (replace-match lice:program-name)))
+  (when (and lice:program-name
+             (member (car license) '("gpl-2.0" "gpl-3.0" "agpl-3.0" "lgpl-3.0")))
+    (insert (format "This file is part of %s.\n\n" lice:program-name))
+    (while (re-search-forward "[Tt]his program" nil t)
+      (replace-match lice:program-name)))
   (goto-char (point-max))
   (skip-chars-backward "\n")
   (delete-region (point) (point-max))
