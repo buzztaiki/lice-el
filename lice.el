@@ -73,10 +73,10 @@
 (define-widget 'lice:comment-style 'choice
   "The comment style selection widget."
   :args `(,@(cl-loop for x in comment-styles
-                  collect `(const
-                            :tag ,(replace-regexp-in-string
-                                   "-" " " (capitalize (symbol-name (car x))))
-                            ,(car x)))
+                     collect `(const
+                               :tag ,(replace-regexp-in-string
+                                      "-" " " (capitalize (symbol-name (car x))))
+                               ,(car x)))
           (other :tag "Mode Default" nil)))
 
 (defcustom lice:license-directories
@@ -127,9 +127,9 @@ should insert header string fragment."
 (defcustom lice:mode-comments
   (append
    (cl-loop for mode in '(c-mode c++-mode java-mode groovy-mode)
-         collect (list mode
-                       :comment-start "/*"
-                       :comment-end "*/"))
+            collect (list mode
+                          :comment-start "/*"
+                          :comment-end "*/"))
    '((nxml-mode :comment-continue "   ")))
   "The definition of mode specific comments.
 Each elements are follows:
@@ -154,18 +154,18 @@ PROPERTIES is a plist whitch has following properties:
 Each element are follows:
 \(SIMPLE-NAME . FILE)"
   (cl-loop for dir in lice:license-directories
-        with licenses
-        if (and dir (file-directory-p dir))
-        append (lice:directory-licenses dir) into licenses
-        finally return (sort licenses
-                             (lambda (a b) (string< (car a) (car b))))))
+           with licenses
+           if (and dir (file-directory-p dir))
+           append (lice:directory-licenses dir) into licenses
+           finally return (sort licenses
+                                (lambda (a b) (string< (car a) (car b))))))
 
 (defun lice:directory-licenses (dir)
   (cl-loop for file in (directory-files dir t)
-        with licenses
-        for name = (file-name-nondirectory file)
-        if (and (file-regular-p file) (not (assoc name licenses)))
-        collect (cons name file)))
+           with licenses
+           for name = (file-name-nondirectory file)
+           if (and (file-regular-p file) (not (assoc name licenses)))
+           collect (cons name file)))
 
 ;;;###autoload
 (defun lice (name)
@@ -178,8 +178,8 @@ NAME is a template name for insertion."
     (save-restriction
       (narrow-to-region (point) (point))
       (cl-loop for component in lice:header-spec
-            do (progn (funcall component license)
-                      (goto-char (point-max))))
+               do (progn (funcall component license)
+                         (goto-char (point-max))))
       (when (lice:comment-enabled-p major-mode)
         (lice:comment-region (point-min) (point-max) major-mode))
       (goto-char (point-max)))))
