@@ -195,15 +195,19 @@ NAME is a template name for insertion."
 
 (defun lice:insert-license (license)
   (insert-file-contents (cdr license))
-  (when (and lice:program-name
-             (member (car license) '("gpl-2.0" "gpl-3.0" "agpl-3.0" "lgpl-3.0")))
-    (insert (format "This file is part of %s.\n\n" lice:program-name))
-    (while (re-search-forward "[Tt]his program" nil t)
-      (replace-match lice:program-name)))
+  (lice:update-license-for-gpl license)
   (goto-char (point-max))
   (skip-chars-backward "\n")
   (delete-region (point) (point-max))
   (insert "\n"))
+
+(defun lice:update-license-for-gpl (license)
+  ;; see https://www.gnu.org/licenses/gpl-howto.html
+  (when (and lice:program-name
+             (member (car license) '("gpl-2.0" "gpl-3.0" "agpl-3.0" "lgpl-3.0")))
+    (insert (format "This file is part of %s.\n\n" lice:program-name))
+    (while (re-search-forward "[Tt]his program" nil t)
+      (replace-match lice:program-name))))
 
 (defun lice:read-license ()
   (completing-read (format "License Name (%s): " lice:default-license)
