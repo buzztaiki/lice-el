@@ -53,7 +53,7 @@
 (require 'cl-lib)
 (require 'newcomment)
 
-(defconst lice:version "0.2")
+(defconst lice:version "0.3")
 
 (defconst lice:system-template-directory
   (expand-file-name "template"
