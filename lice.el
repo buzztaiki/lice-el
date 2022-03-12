@@ -1,4 +1,4 @@
-;;; lice.el --- License And Header Template
+;;; lice.el --- License And Header Template -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2012  Taiki Sugawara
 
@@ -156,15 +156,16 @@ Each element are follows:
   (cl-loop for dir in lice:license-directories
            with licenses
            if (and dir (file-directory-p dir))
-           append (lice:directory-licenses dir) into licenses
+           for dir-licenses = (lice:directory-licenses dir)
+           for dir-licenses = (cl-delete-if (lambda (x) (assoc (car x) licenses)) dir-licenses)
+           append dir-licenses into licenses
            finally return (sort licenses
                                 (lambda (a b) (string< (car a) (car b))))))
 
 (defun lice:directory-licenses (dir)
   (cl-loop for file in (directory-files dir t)
-           with licenses
            for name = (file-name-nondirectory file)
-           if (and (file-regular-p file) (not (assoc name licenses)))
+           if (file-regular-p file)
            collect (cons name file)))
 
 ;;;###autoload
@@ -184,11 +185,11 @@ NAME is a template name for insertion."
         (lice:comment-region (point-min) (point-max) major-mode))
       (goto-char (point-max)))))
 
-(defun lice:insert-description (license)
+(defun lice:insert-description (_license)
   (when lice:program-description
     (insert (format "%s\n" lice:program-description))))
 
-(defun lice:insert-copyright (license)
+(defun lice:insert-copyright (_license)
   (insert (format "Copyright (C) %s  %s\n\n"
                   (format-time-string "%Y")  lice:copyright-holder)))
 
