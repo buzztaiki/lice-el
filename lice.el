@@ -156,9 +156,9 @@ Each element are follows:
   (cl-loop for dir in lice:license-directories
            with licenses
            if (and dir (file-directory-p dir))
-           for dir-licenses = (lice:directory-licenses dir)
-           for dir-licenses = (cl-delete-if (lambda (x) (assoc (car x) licenses)) dir-licenses)
-           append dir-licenses into licenses
+           do (let* ((dir-licenses (lice:directory-licenses dir))
+                     (dir-licenses (cl-delete-if (lambda (x) (assoc (car x) licenses)) dir-licenses)))
+                (setq licenses (append dir-licenses licenses)))
            finally return (sort licenses
                                 (lambda (a b) (string< (car a) (car b))))))
 
