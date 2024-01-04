@@ -169,31 +169,38 @@ Each element are follows:
            collect (cons name file)))
 
 ;;;###autoload
-(defun lice (name)
+(defun lice (name &optional year)
   "Insert license and headers.
 NAME is a template name for insertion."
-  (interactive (list (lice:read-license)))
+  (interactive (list
+                (lice:read-license)
+                (if current-prefix-arg (lice:read-start-year))))
   (let ((license (assoc name (lice:licenses))))
     (unless license
       (error "Unknown license name: %s" name))
     (save-restriction
       (narrow-to-region (point) (point))
       (cl-loop for component in lice:header-spec
-               do (progn (funcall component license)
+               do (progn (funcall component license year)
                          (goto-char (point-max))))
       (when (lice:comment-enabled-p major-mode)
         (lice:comment-region (point-min) (point-max) major-mode))
       (goto-char (point-max)))))
 
-(defun lice:insert-description (_license)
+(defun lice:insert-description (_license _year)
   (when lice:program-description
     (insert (format "%s\n" lice:program-description))))
 
-(defun lice:insert-copyright (_license)
-  (insert (format "Copyright (C) %s  %s\n\n"
-                  (format-time-string "%Y")  lice:copyright-holder)))
+(defun lice:insert-copyright (_license year)
+  (let* ((current-year (format-time-string "%Y"))
+         (years-string (if year
+                           (format "%s - %s" year current-year)
+                         current-year)))
+    (insert (format "Copyright (C) %s  %s\n\n"
+                    years-string
+                    lice:copyright-holder))))
 
-(defun lice:insert-license (license)
+(defun lice:insert-license (license _year)
   (insert-file-contents (cdr license))
   (lice:update-license-for-gpl license)
   (goto-char (point-max))
@@ -214,6 +221,19 @@ NAME is a template name for insertion."
                    (lice:licenses)
                    nil t nil 'lice:license-history
                    lice:default-license))
+
+(defun lice:read-start-year ()
+  (let* ((current-year (caddr (calendar-current-date)))
+         (prev-year (1- current-year))
+         (year nil))
+    (while
+        (progn
+          (setq year (or (read-number (format "Start Year: " prev-year) prev-year)))
+          (unless (< year current-year)
+            (message "Please enter a year lower than the current year.")
+            (sit-for 1)
+            t)))
+    (number-to-string year)))
 
 (defun lice:mode-comment (mode)
   (and mode
