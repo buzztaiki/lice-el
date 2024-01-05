@@ -23,6 +23,17 @@ can select license on minibuffer completion.
 When you select license, and enter the `RET`, license and copyright is
 putted into a text.
 
+By default the current year is used for the copyright notice as follows:
+
+    Copyright (C) 2024  Taiki Sugawara
+
+When run with the universal prefix argument aka `C-u`, lice will prompt
+for a year to set as the start of the copyright range. If you select
+2012 for the previous example, the copyright notice will become:
+
+    Copyright (C) 2012-2024  Taiki Sugawara
+
+
 Use dir-locals
 --------------
 
