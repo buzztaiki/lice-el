@@ -194,7 +194,7 @@ NAME is a template name for insertion."
 (defun lice:insert-copyright (_license year)
   (let* ((current-year (format-time-string "%Y"))
          (years-string (if year
-                           (format "%s - %s" year current-year)
+                           (format "%s-%s" year current-year)
                          current-year)))
     (insert (format "Copyright (C) %s  %s\n\n"
                     years-string
